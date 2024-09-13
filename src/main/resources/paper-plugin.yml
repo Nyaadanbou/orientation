@@ -1,0 +1,4 @@
+name: NewbieProtect
+version: '1.0-SNAPSHOT'
+main: cc.mewcraft.newbieProtect.NewbieProtect
+api-version: '1.21'
