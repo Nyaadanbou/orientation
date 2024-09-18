@@ -1,7 +1,7 @@
-package cc.mewcraft.newbieprotect.newbie
+package cc.mewcraft.orientation.newbie
 
-import cc.mewcraft.newbieprotect.config.NewbieConfig
-import cc.mewcraft.newbieprotect.plugin
+import cc.mewcraft.orientation.config.NewbieConfig
+import cc.mewcraft.orientation.plugin
 import com.github.shynixn.mccoroutine.bukkit.asyncDispatcher
 import com.github.shynixn.mccoroutine.bukkit.launch
 import com.github.shynixn.mccoroutine.bukkit.registerSuspendingEvents

@@ -1,4 +1,4 @@
-name: NewbieProtect
+name: orientation
 version: '1.0-SNAPSHOT'
-main: cc.mewcraft.newbieProtect.NewbieProtect
+main: cc.mewcraft.orientation.OrientationPlugin
 api-version: '1.21'

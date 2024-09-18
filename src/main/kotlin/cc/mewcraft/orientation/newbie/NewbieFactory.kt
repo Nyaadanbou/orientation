@@ -1,8 +1,8 @@
-package cc.mewcraft.newbieprotect.newbie
+package cc.mewcraft.orientation.newbie
 
-import cc.mewcraft.newbieprotect.config.NewbieConfig
-import cc.mewcraft.newbieprotect.protect.KeepInvProtect
-import cc.mewcraft.newbieprotect.protect.ProtectGroup
+import cc.mewcraft.orientation.config.NewbieConfig
+import cc.mewcraft.orientation.protect.KeepInvProtect
+import cc.mewcraft.orientation.protect.ProtectGroup
 import java.util.UUID
 
 object NewbieFactory {

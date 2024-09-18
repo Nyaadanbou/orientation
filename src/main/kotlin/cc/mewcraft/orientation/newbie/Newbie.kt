@@ -1,6 +1,6 @@
-package cc.mewcraft.newbieprotect.newbie
+package cc.mewcraft.orientation.newbie
 
-import cc.mewcraft.newbieprotect.protect.ProtectGroup
+import cc.mewcraft.orientation.protect.ProtectGroup
 import java.util.*
 
 /**

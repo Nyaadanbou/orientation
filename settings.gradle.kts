@@ -1,1 +1,1 @@
-rootProject.name = "NewbieProtect"
+rootProject.name = "orientation"

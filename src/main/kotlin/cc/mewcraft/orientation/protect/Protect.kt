@@ -1,4 +1,4 @@
-package cc.mewcraft.newbieprotect.protect
+package cc.mewcraft.orientation.protect
 
 /**
  * 代表一个保护.

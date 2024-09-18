@@ -1,6 +1,6 @@
-package cc.mewcraft.newbieprotect.protect
+package cc.mewcraft.orientation.protect
 
-import cc.mewcraft.newbieprotect.extension.toNewbie
+import cc.mewcraft.orientation.extension.toNewbie
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent

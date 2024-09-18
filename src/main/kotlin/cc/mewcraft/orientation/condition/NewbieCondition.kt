@@ -1,4 +1,4 @@
-package cc.mewcraft.newbieprotect.condition
+package cc.mewcraft.orientation.condition
 
 import java.util.*
 

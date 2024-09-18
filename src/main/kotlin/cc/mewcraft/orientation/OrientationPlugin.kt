@@ -1,14 +1,14 @@
-package cc.mewcraft.newbieprotect
+package cc.mewcraft.orientation
 
-import cc.mewcraft.newbieprotect.newbie.NewbieManager
-import cc.mewcraft.newbieprotect.protect.ProtectListener
+import cc.mewcraft.orientation.newbie.NewbieManager
+import cc.mewcraft.orientation.protect.ProtectListener
 import com.github.shynixn.mccoroutine.bukkit.SuspendingJavaPlugin
 import com.github.shynixn.mccoroutine.bukkit.registerSuspendingEvents
 import org.bukkit.event.HandlerList
 
-internal class NewbieProtect : SuspendingJavaPlugin() {
+internal class OrientationPlugin : SuspendingJavaPlugin() {
     companion object {
-        var INSTANCE: NewbieProtect? = null
+        var INSTANCE: OrientationPlugin? = null
     }
 
     val newbieManager: NewbieManager = NewbieManager()
@@ -26,5 +26,5 @@ internal class NewbieProtect : SuspendingJavaPlugin() {
     }
 }
 
-internal val plugin: NewbieProtect
-    get() = NewbieProtect.INSTANCE ?: throw IllegalStateException("Plugin not enabled")
+internal val plugin: OrientationPlugin
+    get() = OrientationPlugin.INSTANCE ?: throw IllegalStateException("Plugin not enabled")
