@@ -1,9 +1,9 @@
-package cc.mewcraft.orientation.newbie
+package cc.mewcraft.orientation.novice
 
 import cc.mewcraft.orientation.protect.ProtectGroup
 import java.util.*
 
-data class NewbieImpl(
+data class NoviceImpl(
     override val uniqueId: UUID,
     override val protects: ProtectGroup
-) : Newbie
+) : Novice

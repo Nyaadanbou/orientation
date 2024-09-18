@@ -3,9 +3,9 @@ package cc.mewcraft.orientation.condition
 import cc.mewcraft.playtime.data.PlaytimeViewer
 import java.util.*
 
-class PlaytimeNewbieCondition(
+class PlaytimeNoviceCondition(
     private val invalidPlaytime: Long
-) : NewbieCondition {
+) : NoviceCondition {
     override suspend fun test(uniqueId: UUID): Boolean {
         val playtime = PlaytimeViewer.viewPlaytime(uniqueId) ?: return true
         return playtime.playTime <= invalidPlaytime

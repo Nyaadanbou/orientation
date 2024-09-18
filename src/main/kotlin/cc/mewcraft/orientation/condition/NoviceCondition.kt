@@ -5,7 +5,7 @@ import java.util.*
 /**
  * 判断是否符合新手保护条件
  */
-interface NewbieCondition {
+interface NoviceCondition {
     /**
      * 判断是否符合新手保护条件.
      *

@@ -1,4 +1,4 @@
-package cc.mewcraft.orientation.newbie
+package cc.mewcraft.orientation.novice
 
 import cc.mewcraft.orientation.config.NewbieConfig
 import cc.mewcraft.orientation.plugin
@@ -15,10 +15,10 @@ import java.util.concurrent.ConcurrentHashMap
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
-class NewbieManager {
+class NoviceManager {
     private var loaded: Boolean = false
 
-    private val newbies: ConcurrentHashMap<UUID, Newbie> = ConcurrentHashMap()
+    private val newbies: ConcurrentHashMap<UUID, Novice> = ConcurrentHashMap()
 
     private val listener: NewbieManagerListener = NewbieManagerListener()
 
@@ -37,11 +37,11 @@ class NewbieManager {
         }
     }
 
-    private suspend fun Newbie.isExpired(): Boolean {
-        return NewbieConfig.newbieConditions.any { !it.test(this.uniqueId) }
+    private suspend fun Novice.isExpired(): Boolean {
+        return NewbieConfig.noviceConditions.any { !it.test(this.uniqueId) }
     }
 
-    val newbieSnapshot: Collection<Newbie>
+    val noviceSnapshot: Collection<Novice>
         get() {
             return newbies.values
         }
@@ -50,7 +50,7 @@ class NewbieManager {
         return newbies.containsKey(uniqueId)
     }
 
-    fun getNewbie(uniqueId: UUID): Newbie? {
+    fun getNewbie(uniqueId: UUID): Novice? {
         return newbies[uniqueId]
     }
 
@@ -74,7 +74,7 @@ class NewbieManager {
         @EventHandler
         private suspend fun onPlayerJoin(event: PlayerJoinEvent) {
             val player = event.player
-            val newbie = NewbieFactory.createNewbie(player.uniqueId) ?: return
+            val newbie = NoviceFactory.createNewbie(player.uniqueId) ?: return
 
             newbies[player.uniqueId] = newbie
         }

@@ -1,6 +1,6 @@
 package cc.mewcraft.orientation
 
-import cc.mewcraft.orientation.newbie.NewbieManager
+import cc.mewcraft.orientation.novice.NoviceManager
 import cc.mewcraft.orientation.protect.ProtectListener
 import com.github.shynixn.mccoroutine.bukkit.SuspendingJavaPlugin
 import com.github.shynixn.mccoroutine.bukkit.registerSuspendingEvents
@@ -11,17 +11,17 @@ internal class OrientationPlugin : SuspendingJavaPlugin() {
         var INSTANCE: OrientationPlugin? = null
     }
 
-    val newbieManager: NewbieManager = NewbieManager()
+    val noviceManager: NoviceManager = NoviceManager()
 
     override suspend fun onEnableAsync() {
         INSTANCE = this
-        newbieManager.onLoad()
+        noviceManager.onLoad()
         server.pluginManager.registerSuspendingEvents(ProtectListener, this)
     }
 
     override suspend fun onDisableAsync() {
         INSTANCE = null
-        newbieManager.onUnload()
+        noviceManager.onUnload()
         HandlerList.unregisterAll(this)
     }
 }

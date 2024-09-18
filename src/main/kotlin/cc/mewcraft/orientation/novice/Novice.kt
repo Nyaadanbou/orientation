@@ -1,4 +1,4 @@
-package cc.mewcraft.orientation.newbie
+package cc.mewcraft.orientation.novice
 
 import cc.mewcraft.orientation.protect.ProtectGroup
 import java.util.*
@@ -6,7 +6,7 @@ import java.util.*
 /**
  * 代表一个新手.
  */
-interface Newbie {
+interface Novice {
     val uniqueId: UUID
 
     /**
