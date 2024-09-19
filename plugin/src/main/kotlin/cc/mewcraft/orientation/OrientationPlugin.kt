@@ -6,25 +6,26 @@ import com.github.shynixn.mccoroutine.bukkit.SuspendingJavaPlugin
 import com.github.shynixn.mccoroutine.bukkit.registerSuspendingEvents
 import org.bukkit.event.HandlerList
 
+internal val plugin: OrientationPlugin
+    get() = OrientationPlugin.instance ?: throw IllegalStateException("Plugin not initialized yet")
+
 internal class OrientationPlugin : SuspendingJavaPlugin() {
     companion object {
-        var INSTANCE: OrientationPlugin? = null
+        var instance: OrientationPlugin? = null
     }
 
     val noviceManager: NoviceManager = NoviceManager()
 
     override suspend fun onEnableAsync() {
-        INSTANCE = this
+        instance = this
         noviceManager.onLoad()
         server.pluginManager.registerSuspendingEvents(ProtectListener, this)
     }
 
     override suspend fun onDisableAsync() {
-        INSTANCE = null
+        instance = null
         noviceManager.onUnload()
         HandlerList.unregisterAll(this)
     }
 }
 
-internal val plugin: OrientationPlugin
-    get() = OrientationPlugin.INSTANCE ?: throw IllegalStateException("Plugin not enabled")
