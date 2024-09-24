@@ -22,7 +22,8 @@ dependencies {
 
 tasks {
     copyJar {
-        jarName.set("orientation-${project.version}.jar")
+        environment = "paper"
+        jarFileName = "orientation-${project.version}.jar"
     }
 }
 
