@@ -34,9 +34,9 @@ paper {
     apiVersion = "1.21"
     author = "g2213swo"
     serverDependencies {
-        register("Kotlin") {
+        register("Playtime") {
             required = true
-            load = RelativeLoadOrder.BEFORE
+            load = RelativeLoadOrder.OMIT
         }
     }
 }

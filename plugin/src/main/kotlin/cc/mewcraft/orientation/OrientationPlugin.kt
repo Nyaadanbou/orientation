@@ -14,7 +14,7 @@ internal class OrientationPlugin : SuspendingJavaPlugin() {
         var instance: OrientationPlugin? = null
     }
 
-    val noviceManager: NoviceManager = NoviceManager()
+    val noviceManager: NoviceManager by lazy { NoviceManager() }
 
     override suspend fun onEnableAsync() {
         instance = this
