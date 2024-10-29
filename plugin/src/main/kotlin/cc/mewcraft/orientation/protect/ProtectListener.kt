@@ -10,7 +10,7 @@ object ProtectListener : Listener {
     private fun onPlayerDeath(event: PlayerDeathEvent) {
         val newbie = event.player.toNewbie() ?: return
 
-        if (newbie.protects.hasProtect<KeepInvProtect>()) {
+        if (newbie.protects.hasProtect(Protect.KEEP_INV)) {
             event.keepInventory = true
             event.keepLevel = true
             event.drops.clear()

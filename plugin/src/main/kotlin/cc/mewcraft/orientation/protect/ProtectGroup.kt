@@ -1,29 +1,27 @@
 package cc.mewcraft.orientation.protect
 
+import it.unimi.dsi.fastutil.objects.ObjectArraySet
+
 interface ProtectGroup {
     companion object {
-        fun create(vararg clazz: Class<out Protect>): ProtectGroup {
+        fun create(vararg protect: Protect): ProtectGroup {
             return ProtectGroupImpl().apply {
-                clazz.forEach { addProtect(it) }
+                protect.forEach { addProtect(it) }
             }
         }
     }
 
-    fun <T : Protect> hasProtect(protectClazz: Class<T>): Boolean
-}
-
-inline fun <reified T : Protect> ProtectGroup.hasProtect(): Boolean {
-    return hasProtect(T::class.java)
+    fun hasProtect(protect: Protect): Boolean
 }
 
 private class ProtectGroupImpl : ProtectGroup {
-    private val protects = mutableSetOf<Class<out Protect>>()
+    private val protects: ObjectArraySet<Protect> = ObjectArraySet()
 
-    override fun <T : Protect> hasProtect(protectClazz: Class<T>): Boolean {
-        return protects.contains(protectClazz)
+    override fun  hasProtect(protect: Protect): Boolean {
+        return protects.contains(protect)
     }
 
-    fun <T : Protect> addProtect(protectClazz: Class<T>) {
-        protects.add(protectClazz)
+    fun addProtect(protect: Protect) {
+        protects.add(protect)
     }
 }

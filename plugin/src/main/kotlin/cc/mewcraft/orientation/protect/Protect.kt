@@ -1,6 +1,5 @@
 package cc.mewcraft.orientation.protect
 
-/**
- * 代表一个保护.
- */
-interface Protect
+enum class Protect {
+    KEEP_INV // Keep inventory
+}
