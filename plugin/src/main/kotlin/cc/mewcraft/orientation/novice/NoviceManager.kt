@@ -1,14 +1,12 @@
 package cc.mewcraft.orientation.novice
 
 import cc.mewcraft.orientation.plugin
+import cc.mewcraft.playtime.Playtime
+import cc.mewcraft.playtime.PlaytimeProvider
+import cc.mewcraft.playtime.data.PlaytimeData
 import com.github.shynixn.mccoroutine.bukkit.asyncDispatcher
 import com.github.shynixn.mccoroutine.bukkit.launch
-import com.github.shynixn.mccoroutine.bukkit.registerSuspendingEvents
 import kotlinx.coroutines.delay
-import org.bukkit.event.EventHandler
-import org.bukkit.event.HandlerList
-import org.bukkit.event.Listener
-import org.bukkit.event.player.PlayerJoinEvent
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.time.DurationUnit
@@ -18,19 +16,17 @@ class NoviceManager {
     private var loaded: Boolean = false
     private val newbies: ConcurrentHashMap<UUID, Novice> = ConcurrentHashMap()
 
-    private val listener: NewbieManagerListener = NewbieManagerListener()
-
-    init {
-        plugin.server.pluginManager.registerSuspendingEvents(listener, plugin)
-    }
-
     private suspend fun refreshNewbies() {
-        val iterator = newbies.iterator()
-
-        while (iterator.hasNext()) {
-            val newbie = iterator.next().value
-            if (newbie.isExpired()) {
-                iterator.remove()
+        for (player in plugin.server.onlinePlayers) {
+            val uniqueId: UUID = player.uniqueId
+            if (newbies.containsKey(uniqueId)) {
+                val novice: Novice = newbies[uniqueId]!!
+                if (novice.isExpired()) {
+                    newbies.remove(uniqueId)
+                    continue
+                }
+            } else {
+                NoviceFactory.createNewbie(uniqueId)?.let { newbies[uniqueId] = it }
             }
         }
     }
@@ -48,6 +44,12 @@ class NoviceManager {
         return newbies[uniqueId]
     }
 
+    suspend fun resetNewbie(uniqueId: UUID) {
+        val playtime: Playtime = PlaytimeProvider.get()
+        playtime.setPlaytime(uniqueId, PlaytimeData())
+        NoviceFactory.createNewbie(uniqueId)?.let { newbies[uniqueId] = it }
+    }
+
     internal fun onLoad() {
         loaded = true
         plugin.launch(plugin.asyncDispatcher) {
@@ -61,16 +63,5 @@ class NoviceManager {
 
     internal fun onUnload() {
         loaded = false
-        HandlerList.unregisterAll(listener)
-    }
-
-    private inner class NewbieManagerListener : Listener {
-        @EventHandler
-        private suspend fun onPlayerJoin(event: PlayerJoinEvent) {
-            val player = event.player
-            val newbie = NoviceFactory.createNewbie(player.uniqueId) ?: return
-
-            newbies[player.uniqueId] = newbie
-        }
     }
 }

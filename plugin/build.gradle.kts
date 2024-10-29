@@ -18,6 +18,9 @@ dependencies {
     implementation(local.mccoroutine.bukkit.core) {
         exclude("org.jetbrains.kotlin")
     }
+
+    implementation(platform(libs.bom.cloud.paper))
+    implementation(platform(libs.bom.cloud.kotlin))
 }
 
 tasks {

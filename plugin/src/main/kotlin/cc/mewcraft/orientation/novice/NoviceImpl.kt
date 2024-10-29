@@ -1,15 +1,21 @@
 package cc.mewcraft.orientation.novice
 
-import cc.mewcraft.orientation.condition.NoviceCondition
+import cc.mewcraft.orientation.config.NewbieConfig
 import cc.mewcraft.orientation.protect.ProtectGroup
+import cc.mewcraft.playtime.PlaytimeProvider
 import java.util.*
 
 data class NoviceImpl(
     override val uniqueId: UUID,
     override val protects: ProtectGroup,
-    override val conditions: Collection<NoviceCondition>
 ) : Novice {
+    private val playtimePlugin = PlaytimeProvider.get()
     override suspend fun isExpired(): Boolean {
-        return conditions.any { !it.test(this.uniqueId) }
+        return timeLeft() <= 0
+    }
+
+    override suspend fun timeLeft(): Long {
+        val playtime = playtimePlugin.getPlaytime(uniqueId)
+        return NewbieConfig.noviceEffectDuration - (playtime?.playTime ?: 0)
     }
 }

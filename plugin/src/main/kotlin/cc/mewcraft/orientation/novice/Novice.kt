@@ -1,6 +1,5 @@
 package cc.mewcraft.orientation.novice
 
-import cc.mewcraft.orientation.condition.NoviceCondition
 import cc.mewcraft.orientation.protect.ProtectGroup
 import java.util.*
 
@@ -18,10 +17,7 @@ interface Novice {
      */
     val protects: ProtectGroup
 
-    /**
-     * 该新手的条件.
-     */
-    val conditions: Collection<NoviceCondition>
-
     suspend fun isExpired(): Boolean
+
+    suspend fun timeLeft(): Long
 }
