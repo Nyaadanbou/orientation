@@ -40,19 +40,9 @@ object NoviceCommand : CommandFactory<CommandSourceStack> {
                         sender.sendMessage("This player not found")
                         return@suspendingHandler
                     }
-
                     val novice = plugin.noviceManager.getNewbie(uniqueId)
-                    if (novice == null) {
-                        sender.sendMessage("This player is not a novice")
-                        return@suspendingHandler
-                    }
 
-                    sender.sendMessage(
-                        """
-                        Player ${target.name} is a novice
-                        - Time left: ${novice.timeLeft()}
-                        """.trimIndent()
-                    )
+                    sender.sendPlainMessage("Player ${target.name} is a novice - Time left: ${novice.timeLeft()}")
                 }
             }.buildAndAdd(this)
 
@@ -73,7 +63,8 @@ object NoviceCommand : CommandFactory<CommandSourceStack> {
                         return@suspendingHandler
                     }
 
-                    plugin.noviceManager.resetNewbie(uniqueId)
+                    val novice = plugin.noviceManager.getNewbie(uniqueId)
+                    novice.reset()
                     sender.sendMessage("Player ${target.name}'s novice status has been reset")
                 }
             }.buildAndAdd(this)

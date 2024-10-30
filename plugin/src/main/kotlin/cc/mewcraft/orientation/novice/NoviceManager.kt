@@ -1,67 +1,52 @@
 package cc.mewcraft.orientation.novice
 
 import cc.mewcraft.orientation.plugin
-import cc.mewcraft.playtime.Playtime
-import cc.mewcraft.playtime.PlaytimeProvider
-import cc.mewcraft.playtime.data.PlaytimeData
-import com.github.shynixn.mccoroutine.bukkit.asyncDispatcher
-import com.github.shynixn.mccoroutine.bukkit.launch
-import kotlinx.coroutines.delay
+import com.github.shynixn.mccoroutine.bukkit.registerSuspendingEvents
+import org.bukkit.event.EventHandler
+import org.bukkit.event.HandlerList
+import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.time.DurationUnit
-import kotlin.time.toDuration
 
 class NoviceManager {
-    private var loaded: Boolean = false
     private val newbies: ConcurrentHashMap<UUID, Novice> = ConcurrentHashMap()
 
-    private suspend fun refreshNewbies() {
-        for (player in plugin.server.onlinePlayers) {
-            val uniqueId: UUID = player.uniqueId
-            if (newbies.containsKey(uniqueId)) {
-                val novice: Novice = newbies[uniqueId]!!
-                if (novice.isExpired()) {
-                    newbies.remove(uniqueId)
-                    continue
-                }
-            } else {
-                NoviceFactory.createNewbie(uniqueId)?.let { newbies[uniqueId] = it }
-            }
-        }
-    }
+    private val internalListener: InternalListener = InternalListener()
 
     val noviceSnapshot: Collection<Novice>
         get() {
             return newbies.values
         }
 
-    fun hasNewbie(uniqueId: UUID): Boolean {
-        return newbies.containsKey(uniqueId)
-    }
-
-    fun getNewbie(uniqueId: UUID): Novice? {
-        return newbies[uniqueId]
-    }
-
-    suspend fun resetNewbie(uniqueId: UUID) {
-        val playtime: Playtime = PlaytimeProvider.get()
-        playtime.setPlaytime(uniqueId, PlaytimeData())
-        NoviceFactory.createNewbie(uniqueId)?.let { newbies[uniqueId] = it }
+    fun getNewbie(uniqueId: UUID): Novice {
+        return newbies.computeIfAbsent(uniqueId) { NoviceFactory.createNewbie(uniqueId) }
     }
 
     internal fun onLoad() {
-        loaded = true
-        plugin.launch(plugin.asyncDispatcher) {
-            while (loaded) {
-                delay(1.toDuration(DurationUnit.SECONDS))
-
-                refreshNewbies()
-            }
-        }
+        plugin.server.pluginManager.registerSuspendingEvents(internalListener, plugin)
     }
 
     internal fun onUnload() {
-        loaded = false
+        HandlerList.unregisterAll(internalListener)
+    }
+
+    private inner class InternalListener : Listener {
+        @EventHandler
+        private fun onPlayerJoin(event: PlayerJoinEvent) {
+            val player = event.player
+            val uniqueId = player.uniqueId
+            if (!newbies.containsKey(uniqueId)) {
+                newbies[uniqueId] = NoviceFactory.createNewbie(uniqueId)
+            }
+        }
+
+        @EventHandler
+        private fun onPlayerQuit(event: PlayerQuitEvent) {
+            val player = event.player
+            val uniqueId = player.uniqueId
+            newbies.remove(uniqueId)
+        }
     }
 }
