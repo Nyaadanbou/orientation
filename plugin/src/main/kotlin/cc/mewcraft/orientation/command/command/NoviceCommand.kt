@@ -8,7 +8,7 @@ import cc.mewcraft.orientation.command.buildAndAdd
 import cc.mewcraft.orientation.command.suspendingHandler
 import cc.mewcraft.orientation.locale.MessageConstants
 import cc.mewcraft.orientation.plugin
-import cc.mewcraft.orientation.util.formatDuration
+import cc.mewcraft.orientation.util.DurationFormatter
 import cc.mewcraft.orientation.util.render
 import cc.mewcraft.orientation.util.sendRenderedMessage
 import io.papermc.paper.command.brigadier.CommandSourceStack
@@ -21,6 +21,7 @@ import org.incendo.cloud.CommandManager
 import org.incendo.cloud.bukkit.parser.PlayerParser
 import org.incendo.cloud.description.Description
 import org.incendo.cloud.kotlin.extension.commandBuilder
+import java.time.Duration
 import kotlin.jvm.optionals.getOrNull
 
 object NoviceCommand : CommandFactory<CommandSourceStack> {
@@ -52,7 +53,7 @@ object NoviceCommand : CommandFactory<CommandSourceStack> {
                     if (novice.isExpired()) {
                         sender.sendRenderedMessage { locale ->
                             val timeLeft = novice.timeLeftMillSeconds() * -1
-                            val timeMessage = formatDuration(timeLeft).render(locale)
+                            val timeMessage = DurationFormatter.CONCISE.format(Duration.ofMillis(timeLeft)).render(locale)
                             MessageConstants.NOVICE_CHECK_EXPIRED_RESULT.arguments(timeMessage).build()
                         }
                         return@suspendingHandler
@@ -60,7 +61,7 @@ object NoviceCommand : CommandFactory<CommandSourceStack> {
 
                     sender.sendRenderedMessage { locale ->
                         val timeLeft = novice.timeLeftMillSeconds()
-                        val timeMessage = formatDuration(timeLeft).render(locale)
+                        val timeMessage = DurationFormatter.CONCISE.format(Duration.ofMillis(timeLeft)).render(locale)
                         MessageConstants.NOVICE_CHECK_SUCCESS_RESULT.arguments(timeMessage).build()
                     }
                 }

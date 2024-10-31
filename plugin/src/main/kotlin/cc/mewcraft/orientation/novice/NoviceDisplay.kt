@@ -3,9 +3,10 @@ package cc.mewcraft.orientation.novice
 import cc.mewcraft.orientation.config.NewbieConfig
 import cc.mewcraft.orientation.locale.MessageConstants
 import cc.mewcraft.orientation.plugin
-import cc.mewcraft.orientation.util.formatDuration
+import cc.mewcraft.orientation.util.DurationFormatter
 import cc.mewcraft.orientation.util.render
 import net.kyori.adventure.bossbar.BossBar
+import java.time.Duration
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -19,7 +20,7 @@ object NoviceDisplay {
             return
         }
 
-        val bossBarMessage = MessageConstants.BOSSBAR_FORMAT.arguments(formatDuration(timeLeftMillis).render(player.locale())).build().render(player.locale())
+        val bossBarMessage = MessageConstants.BOSSBAR_FORMAT.arguments(DurationFormatter.CONCISE.format(Duration.ofMillis(timeLeftMillis)).render(player.locale())).build().render(player.locale())
 
         val oldBossBar = bossBars[uniqueId]
         if (oldBossBar != null) {
