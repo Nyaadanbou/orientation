@@ -2,9 +2,14 @@ package cc.mewcraft.orientation.novice
 
 import cc.mewcraft.orientation.config.NewbieConfig
 import cc.mewcraft.orientation.protect.ProtectGroup
+import cc.mewcraft.orientation.util.AutoRefreshValue
+import cc.mewcraft.orientation.util.RefreshListener
 import cc.mewcraft.playtime.PlaytimeProvider
 import cc.mewcraft.playtime.data.PlaytimeData
+import kotlinx.coroutines.Dispatchers
 import java.util.*
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 data class NoviceImpl(
     override val uniqueId: UUID,
@@ -14,16 +19,36 @@ data class NoviceImpl(
         private val playtimePlugin = PlaytimeProvider.get()
     }
 
-    override suspend fun isExpired(): Boolean {
-        return timeLeft() <= 0
+    private val timeLeftCache: AutoRefreshValue<Long> = AutoRefreshValue(1.toDuration(DurationUnit.MINUTES), Dispatchers.IO) {
+        val playtime = playtimePlugin.getPlaytime(uniqueId)
+        NewbieConfig.noviceEffectDuration - (playtime?.playTime ?: 0)
+    }.also { value ->
+        value.addRefreshListener(
+            RefreshListener(
+                onRefresh = { NoviceDisplay.bossBar(uniqueId, it) }
+            )
+        )
     }
 
-    override suspend fun timeLeft(): Long {
-        val playtime = playtimePlugin.getPlaytime(uniqueId)
-        return NewbieConfig.noviceEffectDuration - (playtime?.playTime ?: 0)
+    override suspend fun isExpired(): Boolean {
+        return timeLeftMillSeconds() <= 0
+    }
+
+    override suspend fun timeLeftMillSeconds(): Long {
+        return timeLeftCache.getValue()
+            ?: timeLeftCache.refreshValue()
     }
 
     override suspend fun reset() {
         playtimePlugin.setPlaytime(uniqueId, PlaytimeData())
+        timeLeftCache.refreshValue()
+    }
+
+    override suspend fun refresh() {
+        timeLeftCache.refreshValue()
+    }
+
+    suspend fun destroy() {
+        timeLeftCache.stopRefreshing()
     }
 }

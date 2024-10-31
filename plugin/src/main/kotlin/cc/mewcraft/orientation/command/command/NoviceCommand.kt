@@ -6,9 +6,14 @@ import cc.mewcraft.orientation.command.CommandConstants
 import cc.mewcraft.orientation.command.CommandPermissions
 import cc.mewcraft.orientation.command.buildAndAdd
 import cc.mewcraft.orientation.command.suspendingHandler
+import cc.mewcraft.orientation.locale.MessageConstants
 import cc.mewcraft.orientation.plugin
+import cc.mewcraft.orientation.util.formatDuration
+import cc.mewcraft.orientation.util.render
+import cc.mewcraft.orientation.util.sendRenderedMessage
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import net.kyori.adventure.identity.Identity
+import net.kyori.adventure.text.Component
 import org.bukkit.command.CommandSender
 import org.incendo.cloud.Command
 import org.incendo.cloud.CommandFactory
@@ -29,7 +34,7 @@ object NoviceCommand : CommandFactory<CommandSourceStack> {
                 name = CommandConstants.ROOT_COMMAND,
                 description = Description.of("Check your novice status"),
             ) {
-                permission(CommandPermissions.NOVICE)
+                permission(CommandPermissions.NOVICE_CHECK)
                 literal(CHECK_LITERAL)
                 optional("target", PlayerParser.playerParser())
                 suspendingHandler { context ->
@@ -37,12 +42,27 @@ object NoviceCommand : CommandFactory<CommandSourceStack> {
                     val target = context.optional<CommandSender>("target").orElse(sender)
                     val uniqueId = target.pointers().get(Identity.UUID).getOrNull()
                     if (uniqueId == null) {
-                        sender.sendMessage("This player not found")
+                        sender.sendRenderedMessage {
+                            MessageConstants.NOVICE_NOT_FOUND_RESULT.arguments(Component.text(target.name)).build()
+                        }
                         return@suspendingHandler
                     }
                     val novice = plugin.noviceManager.getNewbie(uniqueId)
 
-                    sender.sendPlainMessage("Player ${target.name} is a novice - Time left: ${novice.timeLeft()}")
+                    if (novice.isExpired()) {
+                        sender.sendRenderedMessage { locale ->
+                            val timeLeft = novice.timeLeftMillSeconds() * -1
+                            val timeMessage = formatDuration(timeLeft).render(locale)
+                            MessageConstants.NOVICE_CHECK_EXPIRED_RESULT.arguments(timeMessage).build()
+                        }
+                        return@suspendingHandler
+                    }
+
+                    sender.sendRenderedMessage { locale ->
+                        val timeLeft = novice.timeLeftMillSeconds()
+                        val timeMessage = formatDuration(timeLeft).render(locale)
+                        MessageConstants.NOVICE_CHECK_SUCCESS_RESULT.arguments(timeMessage).build()
+                    }
                 }
             }.buildAndAdd(this)
 
@@ -51,7 +71,7 @@ object NoviceCommand : CommandFactory<CommandSourceStack> {
                 name = CommandConstants.ROOT_COMMAND,
                 description = Description.of("Reset a player's novice status"),
             ) {
-                permission(CommandPermissions.NOVICE)
+                permission(CommandPermissions.NOVICE_RESET)
                 literal(RESET_LITERAL)
                 optional("target", PlayerParser.playerParser())
                 suspendingHandler { context ->
@@ -59,13 +79,17 @@ object NoviceCommand : CommandFactory<CommandSourceStack> {
                     val target = context.optional<CommandSender>("target").orElse(sender)
                     val uniqueId = target.pointers().get(Identity.UUID).getOrNull()
                     if (uniqueId == null) {
-                        sender.sendMessage("This player not found")
+                        sender.sendRenderedMessage {
+                            MessageConstants.NOVICE_NOT_FOUND_RESULT.arguments(Component.text(target.name)).build()
+                        }
                         return@suspendingHandler
                     }
 
                     val novice = plugin.noviceManager.getNewbie(uniqueId)
                     novice.reset()
-                    sender.sendMessage("Player ${target.name}'s novice status has been reset")
+                    sender.sendRenderedMessage {
+                        MessageConstants.NOVICE_RESET_SUCCESS_RESULT.arguments(Component.text(target.name)).build()
+                    }
                 }
             }.buildAndAdd(this)
         }

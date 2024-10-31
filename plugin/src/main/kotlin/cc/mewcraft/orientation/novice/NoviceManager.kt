@@ -1,5 +1,6 @@
 package cc.mewcraft.orientation.novice
 
+import cc.mewcraft.orientation.event.OrientationReloadEvent
 import cc.mewcraft.orientation.plugin
 import com.github.shynixn.mccoroutine.bukkit.registerSuspendingEvents
 import org.bukkit.event.EventHandler
@@ -43,10 +44,15 @@ class NoviceManager {
         }
 
         @EventHandler
-        private fun onPlayerQuit(event: PlayerQuitEvent) {
+        private suspend fun onPlayerQuit(event: PlayerQuitEvent) {
             val player = event.player
             val uniqueId = player.uniqueId
-            newbies.remove(uniqueId)
+            newbies.remove(uniqueId).also { (it as NoviceImpl).destroy() }
+        }
+
+        @EventHandler
+        private suspend fun onPluginReload(event: OrientationReloadEvent) {
+            newbies.values.forEach { it.refresh() }
         }
     }
 }

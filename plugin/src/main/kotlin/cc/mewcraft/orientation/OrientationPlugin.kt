@@ -3,6 +3,8 @@
 package cc.mewcraft.orientation
 
 import cc.mewcraft.orientation.command.NoviceCommandManager
+import cc.mewcraft.orientation.event.OrientationReloadEvent
+import cc.mewcraft.orientation.locale.TranslationManager
 import cc.mewcraft.orientation.novice.NoviceManager
 import cc.mewcraft.orientation.protect.ProtectListener
 import com.github.shynixn.mccoroutine.bukkit.SuspendingJavaPlugin
@@ -19,6 +21,8 @@ internal class OrientationPlugin: SuspendingJavaPlugin() {
     }
 
     private lateinit var commandManager: NoviceCommandManager
+
+    val translationManager: TranslationManager by lazy { TranslationManager() }
     val noviceManager: NoviceManager by lazy { NoviceManager() }
 
     override suspend fun onEnableAsync() {
@@ -29,6 +33,8 @@ internal class OrientationPlugin: SuspendingJavaPlugin() {
         this.commandManager = NoviceCommandManager(commandManager).also { it.init() }
 
         noviceManager.onLoad()
+        reload()
+
         server.pluginManager.registerSuspendingEvents(ProtectListener, this)
     }
 
@@ -36,6 +42,14 @@ internal class OrientationPlugin: SuspendingJavaPlugin() {
         instance = null
         noviceManager.onUnload()
         HandlerList.unregisterAll(this)
+    }
+
+    internal fun reload() {
+        reloadConfig()
+        saveDefaultConfig()
+        translationManager.reload()
+
+        OrientationReloadEvent().callEvent()
     }
 }
 

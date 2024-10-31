@@ -1,0 +1,26 @@
+#
+# 文本格式文档: https://docs.advntr.dev/minimessage/format
+#
+# 你可以将值设置成""（空的）来禁用此消息，例如（下面这个）：
+# commands.player.anvil.success: ""
+#
+# 多行消息方法:
+#  1. "第一行<newline>第二行"
+#  2. key:
+#     - 第一行
+#     - 第二行
+#
+
+commands.reload.success: "<green>重载成功！ <gray>(<arg:0>ms)"
+commands.error.novice.not_found: "<red>目标 <arg:0> 不存在！"
+commands.success.check.novice.result: "<green>你是一个新手！<newline><gray>- 你的剩余新手效果时间: <arg:0>"
+commands.error.check.novice.expired: "<red>此玩家的新手效果已经过期了！ 已过期时间: <arg:0>"
+commands.success.reset.novice.result: "<green>已重置 <arg:0> 的新手效果！"
+
+display.bossbar.format: "<gray>剩余新手效果时间: <green><arg:0>"
+display.time.hours_minutes: "<arg:0> 小时 <arg:1> 分钟"
+display.time.hours_seconds: "<arg:0> 小时 <arg:1> 秒"
+display.time.minutes_seconds: "<arg:0> 分钟 <arg:1> 秒"
+display.time.hours: "<arg:0> 小时"
+display.time.minutes: "<arg:0> 分钟"
+display.time.seconds: "<arg:0> 秒"

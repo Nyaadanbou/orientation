@@ -27,12 +27,17 @@ interface Novice {
     suspend fun isExpired(): Boolean
 
     /**
-     * 返回该新手还剩下多少时间成为一个非新手.
+     * 返回该新手还剩下多少时间成为一个非新手, 单位为毫秒.
      */
-    suspend fun timeLeft(): Long
+    suspend fun timeLeftMillSeconds(): Long
 
     /**
      * 重置该新手的新手状态.
      */
     suspend fun reset()
+
+    /**
+     * 刷新该新手的状态.
+     */
+    suspend fun refresh()
 }
