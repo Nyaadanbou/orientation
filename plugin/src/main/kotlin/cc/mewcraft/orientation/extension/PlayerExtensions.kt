@@ -5,5 +5,5 @@ import cc.mewcraft.orientation.plugin
 import org.bukkit.entity.Player
 
 fun Player.toNewbie(): Novice? {
-    return plugin.noviceManager.getNewbie(this.uniqueId)
+    return plugin.noviceManager.getNovice(this.uniqueId)
 }

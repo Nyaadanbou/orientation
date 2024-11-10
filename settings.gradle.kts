@@ -42,3 +42,4 @@ dependencyResolutionManagement {
 rootProject.name = "orientation"
 
 include("plugin")
+include("api")

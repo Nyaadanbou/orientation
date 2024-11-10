@@ -48,7 +48,7 @@ object NoviceCommand : CommandFactory<CommandSourceStack> {
                         }
                         return@suspendingHandler
                     }
-                    val novice = plugin.noviceManager.getNewbie(uniqueId)
+                    val novice = plugin.noviceManager.getNovice(uniqueId)
 
                     if (novice.isExpired()) {
                         sender.sendRenderedMessage { locale ->
@@ -86,7 +86,7 @@ object NoviceCommand : CommandFactory<CommandSourceStack> {
                         return@suspendingHandler
                     }
 
-                    val novice = plugin.noviceManager.getNewbie(uniqueId)
+                    val novice = plugin.noviceManager.getNovice(uniqueId)
                     novice.reset()
                     sender.sendRenderedMessage {
                         MessageConstants.NOVICE_RESET_SUCCESS_RESULT.arguments(Component.text(target.name)).build()

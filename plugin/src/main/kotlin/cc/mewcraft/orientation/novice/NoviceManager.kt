@@ -21,7 +21,7 @@ class NoviceManager {
             return newbies.values
         }
 
-    fun getNewbie(uniqueId: UUID): Novice {
+    fun getNovice(uniqueId: UUID): Novice {
         return newbies.computeIfAbsent(uniqueId) { NoviceFactory.createNewbie(uniqueId) }
     }
 

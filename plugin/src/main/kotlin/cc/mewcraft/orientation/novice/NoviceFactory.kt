@@ -6,6 +6,6 @@ import java.util.*
 
 object NoviceFactory {
     fun createNewbie(uniqueId: UUID): Novice {
-        return NoviceImpl(uniqueId, ProtectGroup.create(Protect.KEEP_INV))
+        return NoviceImpl(uniqueId, ProtectGroup(Protect.KEEP_INV))
     }
 }

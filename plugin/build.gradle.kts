@@ -6,11 +6,14 @@ plugins {
     alias(local.plugins.pluginyml.paper)
 }
 
+group = "cc.mewcraft.orientation"
 version = "1.0.0-SNAPSHOT"
 
 dependencies {
     compileOnly(local.paper)
     compileOnly(local.playtime.paper)
+
+    implementation(project(":api"))
 
     implementation(local.mccoroutine.bukkit.api) {
         exclude("org.jetbrains.kotlin")

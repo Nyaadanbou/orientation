@@ -3,7 +3,6 @@ package cc.mewcraft.orientation.novice
 import cc.mewcraft.orientation.config.NewbieConfig
 import cc.mewcraft.orientation.protect.ProtectGroup
 import cc.mewcraft.orientation.util.AutoRefreshValue
-import cc.mewcraft.orientation.util.RefreshListener
 import cc.mewcraft.playtime.PlaytimeProvider
 import cc.mewcraft.playtime.data.PlaytimeData
 import kotlinx.coroutines.Dispatchers
@@ -22,12 +21,6 @@ data class NoviceImpl(
     private val timeLeftCache: AutoRefreshValue<Long> = AutoRefreshValue(1.toDuration(DurationUnit.MINUTES), Dispatchers.IO) {
         val playtime = playtimePlugin.getPlaytime(uniqueId)
         NewbieConfig.noviceEffectDuration - (playtime?.playTime ?: 0)
-    }.also { value ->
-        value.addRefreshListener(
-            RefreshListener(
-                onRefresh = { NoviceDisplay.bossBar(uniqueId, it) }
-            )
-        )
     }
 
     override suspend fun isExpired(): Boolean {

@@ -2,22 +2,16 @@ package cc.mewcraft.orientation.protect
 
 import it.unimi.dsi.fastutil.objects.ObjectArraySet
 
-interface ProtectGroup {
-    companion object {
-        fun create(vararg protect: Protect): ProtectGroup {
-            return ProtectGroupImpl().apply {
-                protect.forEach { addProtect(it) }
-            }
-        }
-    }
-
-    fun hasProtect(protect: Protect): Boolean
+fun ProtectGroup(vararg protect: Protect): ProtectGroup {
+    val protectGroup = ProtectGroupImpl()
+    protect.forEach { protectGroup.addProtect(it) }
+    return protectGroup
 }
 
 private class ProtectGroupImpl : ProtectGroup {
     private val protects: ObjectArraySet<Protect> = ObjectArraySet()
 
-    override fun  hasProtect(protect: Protect): Boolean {
+    override fun hasProtect(protect: Protect): Boolean {
         return protects.contains(protect)
     }
 

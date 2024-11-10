@@ -21,6 +21,7 @@ internal class OrientationPlugin: SuspendingJavaPlugin() {
     }
 
     private lateinit var commandManager: NoviceCommandManager
+    private var orientation: Orientation? = null
 
     val translationManager: TranslationManager by lazy { TranslationManager() }
     val noviceManager: NoviceManager by lazy { NoviceManager() }
@@ -36,10 +37,14 @@ internal class OrientationPlugin: SuspendingJavaPlugin() {
         reload()
 
         server.pluginManager.registerSuspendingEvents(ProtectListener, this)
+
+        orientation = OrientationImpl(this)
+        OrientationProvider.register(orientation!!)
     }
 
     override suspend fun onDisableAsync() {
         instance = null
+        orientation?.let { OrientationProvider.unregister() }
         noviceManager.onUnload()
         HandlerList.unregisterAll(this)
     }
