@@ -1,11 +1,15 @@
 package cc.mewcraft.orientation.novice
 
 import cc.mewcraft.orientation.config.NewbieConfig
+import cc.mewcraft.orientation.plugin
 import cc.mewcraft.orientation.protect.ProtectGroup
 import cc.mewcraft.orientation.util.AutoRefreshValue
 import cc.mewcraft.playtime.PlaytimeProvider
 import cc.mewcraft.playtime.data.PlaytimeData
+import com.github.shynixn.mccoroutine.bukkit.asyncDispatcher
+import com.github.shynixn.mccoroutine.bukkit.scope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
@@ -36,13 +40,17 @@ data class NoviceImpl(
             ?: timeLeftCache.refreshValue()
     }
 
-    override suspend fun reset() {
-        playtimePlugin.setPlaytime(uniqueId, PlaytimeData())
-        timeLeftCache.refreshValue()
+    override fun reset() {
+        plugin.scope.launch(plugin.asyncDispatcher) {
+            playtimePlugin.setPlaytime(uniqueId, PlaytimeData())
+            timeLeftCache.refreshValue()
+        }
     }
 
-    override suspend fun refresh() {
-        timeLeftCache.refreshValue()
+    override fun refresh() {
+        plugin.scope.launch(plugin.asyncDispatcher) {
+            timeLeftCache.refreshValue()
+        }
     }
 
     suspend fun destroy() {

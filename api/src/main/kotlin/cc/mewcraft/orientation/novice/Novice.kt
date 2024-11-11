@@ -39,10 +39,10 @@ interface Novice {
     /**
      * 重置该新手的新手状态.
      */
-    suspend fun reset()
+    fun reset()
 
     /**
      * 刷新该新手的状态.
      */
-    suspend fun refresh()
+    fun refresh()
 }
