@@ -1,5 +1,6 @@
 package cc.mewcraft.orientation.util
 
+import cc.mewcraft.orientation.novice.NoviceRefreshListener
 import kotlinx.coroutines.*
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.coroutines.CoroutineContext
@@ -13,7 +14,7 @@ class AutoRefreshValue<T>(
     private var cachedValue: T? = null
     private val scope = CoroutineScope(coroutineContext + CoroutineName("Auto Refresh Value") + SupervisorJob())
     private var refreshJob: Job? = null
-    private val refreshListeners: CopyOnWriteArrayList<RefreshListener<T>> = CopyOnWriteArrayList()
+    private val noviceRefreshListeners: CopyOnWriteArrayList<NoviceRefreshListener<T>> = CopyOnWriteArrayList()
 
     init {
         startRefreshing()
@@ -24,7 +25,7 @@ class AutoRefreshValue<T>(
         refreshJob = scope.launch {
             while (isActive) {
                 cachedValue = valueProvider()
-                refreshListeners.forEach { it.onRefresh(cachedValue!!) }
+                noviceRefreshListeners.forEach { it.onRefresh(cachedValue!!) }
                 delay(expireTime)
             }
         }
@@ -33,43 +34,22 @@ class AutoRefreshValue<T>(
     fun getValue(): T? = cachedValue
 
     suspend fun stopRefreshing() {
-        refreshListeners.forEach { it.onDestroy() }
-        refreshListeners.clear()
+        noviceRefreshListeners.forEach { it.onDestroy() }
+        noviceRefreshListeners.clear()
         refreshJob?.cancel()
         scope.cancel()
     }
 
-    fun addRefreshListener(listener: RefreshListener<T>) {
-        refreshListeners.add(listener)
+    fun addRefreshListener(listener: NoviceRefreshListener<T>) {
+        noviceRefreshListeners.add(listener)
     }
 
     suspend fun refreshValue(): T {
         cachedValue = valueProvider()
-        refreshListeners.forEach { it.onRefresh(cachedValue!!) }
+        noviceRefreshListeners.forEach { it.onRefresh(cachedValue!!) }
         startRefreshing()
         return cachedValue!!
     }
 
     operator fun getValue(thisRef: Any?, property: Any?): T? = cachedValue
-}
-
-fun <T> RefreshListener(
-    onRefresh: suspend (T) -> Unit = { },
-    onExpire: suspend () -> Unit = { },
-) : RefreshListener<T> {
-    return object : RefreshListener<T> {
-        override suspend fun onRefresh(value: T) {
-            onRefresh(value)
-        }
-
-        override suspend fun onDestroy() {
-            onExpire()
-        }
-    }
-}
-
-interface RefreshListener<T> {
-    suspend fun onRefresh(value: T)
-
-    suspend fun onDestroy()
 }

@@ -23,6 +23,10 @@ data class NoviceImpl(
         NewbieConfig.noviceEffectDuration - (playtime?.playTime ?: 0)
     }
 
+    override fun addRefreshListener(listener: NoviceRefreshListener<Long>) {
+        timeLeftCache.addRefreshListener(listener)
+    }
+
     override suspend fun isExpired(): Boolean {
         return timeLeftMillSeconds() <= 0
     }

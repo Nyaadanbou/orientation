@@ -22,6 +22,11 @@ interface Novice {
     val protects: ProtectGroup
 
     /**
+     * 添加一个新手状态刷新监听器.
+     */
+    fun addRefreshListener(listener: NoviceRefreshListener<Long>)
+
+    /**
      * 该新手是否已经过期.
      */
     suspend fun isExpired(): Boolean
