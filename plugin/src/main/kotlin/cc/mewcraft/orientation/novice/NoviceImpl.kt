@@ -22,9 +22,12 @@ data class NoviceImpl(
         private val playtimePlugin = PlaytimeProvider.get()
     }
 
+    override val maxTimeMillSeconds: Long
+        get() = NewbieConfig.noviceEffectDuration
+
     private val timeLeftCache: AutoRefreshValue<Long> = AutoRefreshValue(1.toDuration(DurationUnit.MINUTES), Dispatchers.IO) {
         val playtime = playtimePlugin.getPlaytime(uniqueId)
-        NewbieConfig.noviceEffectDuration - (playtime?.playTime ?: 0)
+        maxTimeMillSeconds - (playtime?.playTime ?: 0)
     }
 
     override fun addRefreshListener(listener: NoviceRefreshListener<Long>) {

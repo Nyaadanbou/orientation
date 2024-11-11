@@ -22,6 +22,11 @@ interface Novice {
     val protects: ProtectGroup
 
     /**
+     * 该新手的最大新手时间, 单位为毫秒.
+     */
+    val maxTimeMillSeconds: Long
+
+    /**
      * 添加一个新手状态刷新监听器.
      */
     fun addRefreshListener(listener: NoviceRefreshListener<Long>)
