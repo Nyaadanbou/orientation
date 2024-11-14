@@ -13,6 +13,7 @@ object ProtectListener : Listener {
         if (newbie.protects.hasProtect(Protect.KEEP_INV)) {
             event.keepInventory = true
             event.keepLevel = true
+            event.droppedExp = 0
             event.drops.clear()
         }
     }
