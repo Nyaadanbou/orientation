@@ -34,6 +34,10 @@ data class NoviceImpl(
         timeLeftCache.addRefreshListener(listener)
     }
 
+    override fun removeRefreshListener(listener: NoviceRefreshListener<Long>) {
+        timeLeftCache.removeRefreshListener(listener)
+    }
+
     override suspend fun isExpired(): Boolean {
         return timeLeftMillSeconds() <= 0
     }

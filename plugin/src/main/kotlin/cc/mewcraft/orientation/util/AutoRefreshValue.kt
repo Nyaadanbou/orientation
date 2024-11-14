@@ -44,6 +44,10 @@ class AutoRefreshValue<T>(
         noviceRefreshListeners.add(listener)
     }
 
+    fun removeRefreshListener(listener: NoviceRefreshListener<T>) {
+        noviceRefreshListeners.remove(listener)
+    }
+
     suspend fun refreshValue(): T {
         cachedValue = valueProvider()
         noviceRefreshListeners.forEach { it.onRefresh(cachedValue!!) }
