@@ -10,6 +10,7 @@ import com.github.shynixn.mccoroutine.bukkit.asyncDispatcher
 import com.github.shynixn.mccoroutine.bukkit.scope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import net.kyori.adventure.key.Key
 import java.util.*
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
@@ -30,12 +31,12 @@ data class NoviceImpl(
         maxTimeMillSeconds - (playtime?.playTime ?: 0)
     }
 
-    override fun addRefreshListener(listener: NoviceRefreshListener<Long>) {
-        timeLeftCache.addRefreshListener(listener)
+    override fun addRefreshListener(key: Key, listener: NoviceRefreshListener<Long>) {
+        timeLeftCache.addRefreshListener(key, listener)
     }
 
-    override fun removeRefreshListener(listener: NoviceRefreshListener<Long>) {
-        timeLeftCache.removeRefreshListener(listener)
+    override fun removeRefreshListener(key: Key) {
+        timeLeftCache.removeRefreshListener(key)
     }
 
     override suspend fun isExpired(): Boolean {

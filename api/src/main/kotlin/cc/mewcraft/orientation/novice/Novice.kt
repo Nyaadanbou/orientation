@@ -1,6 +1,7 @@
 package cc.mewcraft.orientation.novice
 
 import cc.mewcraft.orientation.protect.ProtectGroup
+import net.kyori.adventure.key.Key
 import java.util.*
 
 /**
@@ -29,12 +30,12 @@ interface Novice {
     /**
      * 添加一个新手状态刷新监听器.
      */
-    fun addRefreshListener(listener: NoviceRefreshListener<Long>)
+    fun addRefreshListener(key: Key, listener: NoviceRefreshListener<Long>)
 
     /**
      * 移除一个新手状态刷新监听器.
      */
-    fun removeRefreshListener(listener: NoviceRefreshListener<Long>)
+    fun removeRefreshListener(key: Key)
 
     /**
      * 该新手是否已经过期.
