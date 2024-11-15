@@ -7,8 +7,10 @@ import org.bukkit.event.entity.PlayerDeathEvent
 
 object ProtectListener : Listener {
     @EventHandler
-    private fun onPlayerDeath(event: PlayerDeathEvent) {
+    private suspend fun onPlayerDeath(event: PlayerDeathEvent) {
         val newbie = event.player.toNewbie() ?: return
+        if (newbie.isExpired())
+            return
 
         if (newbie.protects.hasProtect(Protect.KEEP_INV)) {
             event.keepInventory = true
